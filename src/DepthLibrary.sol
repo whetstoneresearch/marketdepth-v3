@@ -4,6 +4,8 @@ pragma solidity ^0.7.6;
 import {IDepth} from "./IDepth.sol";
 import {FullMath} from "v3-core/contracts/libraries/FullMath.sol";
 import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
+import {TickMath} from "v3-core/contracts/libraries/TickMath.sol";
+
 
 library DepthLibrary {
     // 112045541949572287496682733568 = sqrt(2) * 2^96
@@ -22,6 +24,13 @@ library DepthLibrary {
             sqrtPriceX96Tgt = uint160(FullMath.mulDiv(sqrtPriceX96, FixedPoint96.Q96, sqrtDepthX96));
         } else {
             revert("InvalidSideToCalculateTargetPrice");
+        }
+
+        // clamp down to the required tick range
+         if (sqrtPriceX96Tgt < TickMath.MIN_SQRT_RATIO) {
+            sqrtPriceX96Tgt = TickMath.MIN_SQRT_RATIO;
+        } else (sqrtPriceX96Tgt > TickMath.MAX_SQRT_RATIO) {
+            sqrtPriceX96Tgt = TickMath.MAX_SQRT_RATIO;
         }
     }
 }
