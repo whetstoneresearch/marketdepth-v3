@@ -1,6 +1,6 @@
-## Uniswap v3 market depth calculator
+## Uniswap v4 market depth calculator
 
-Calculates market depth (the amount of assets avaiable to trade within a certain price region)
+Calculates market depth (the amount of assets avaiable to trade within a certain price region) and TVL (amount of assets in the pool) for Uniswap v4
 Inspired by [Uniswap market depth study](https://github.com/Uniswap/v3-market-depth-study) and [python implimentation](https://github.com/Uniswap/v3-market-depth-study)
 
 ### Usage
@@ -12,6 +12,8 @@ For example, 2% market depth is 80016521857016597127997947904 or sqrt(1 + .02) *
 `side` provides the depth in either higher, lower, and both (which is higher + lower).
 
 `amountInToken0` determines the token that depth is quoted in (token0 or token1)
+
+By providing `sqrtDepthX96=0`, you calculate TVL (max depth).
 
 ### Running the tests
 We test using a python script with ffi so you need to install eth_abi
