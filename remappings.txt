@@ -5,3 +5,4 @@ v3-core/=lib/v3-core/
 v3-periphery/=lib/v3-periphery/
 @openzeppelin/=lib/openzeppelin-contracts
 @uniswap/v3-core=lib/v3-core/
+v4-core=lib/v4-core/

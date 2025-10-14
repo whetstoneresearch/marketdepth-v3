@@ -2,6 +2,8 @@
 pragma solidity ^0.7.6;
 pragma abicoder v2;
 
+import { PoolKey } from "v4-core/src/types/PoolKey.sol";
+
 /// @title IDepth
 /// @notice Interface for calculating the market depth of a v3 pool.
 interface IDepth {
@@ -26,7 +28,7 @@ interface IDepth {
         int24 tickSpacing;
         uint128 liquidity;
         uint160 sqrtPriceX96;
-        address pool;
+        poolKey pool;
     }
 
     /// @notice Calculates the market depth (the amount available to trade in or out) for the requested pools

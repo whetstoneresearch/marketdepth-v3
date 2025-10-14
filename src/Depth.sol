@@ -11,23 +11,36 @@ import {IDepth} from "./IDepth.sol";
 import {PoolTickBitmap} from "./PoolTickBitmap.sol";
 import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
 import {DepthLibrary} from "./DepthLibrary.sol";
+import {StateLibrary} from "v4-core/src/libraries/StateLibrary.sol";
+import {TransientStateLibrary } from "v4-core/src/libraries/TransientStateLibrary.sol";
+import {PoolKey} from "v4-core/src/types/PoolKey.sol";
+import {IPoolManager} from "v4-core/src/interfaces/IPoolManager.sol";
 
 contract Depth is IDepth {
+    using PoolIdLibrary for PoolKey;
     using DepthLibrary for IDepth.DepthConfig;
     using PoolTickBitmap for IDepth.PoolVariables;
+    using StateLibrary for IPoolManager;
+    using TransientStateLibrary for IPoolManager;
+    
+    IPoolManager immutable poolManager;
 
-    function calculateDepths(address[] memory pools, uint256[] memory sqrtDepthX96, DepthConfig[] memory configs)
+    constructor(address poolManager_) {
+        poolManager = IPoolManager(poolManager_);
+    } 
+
+    function calculateDepths(PoolKey[] memory poolKeys, uint256[] memory sqrtDepthX96, DepthConfig[] memory configs)
         external
         view
         override
         returns (uint256[] memory amounts)
     {
-        require(sqrtDepthX96.length == configs.length && pools.length == sqrtDepthX96.length, "LengthMismatch");
+        require(sqrtDepthX96.length == configs.length && poolKeys.length == sqrtDepthX96.length, "LengthMismatch");
         amounts = new uint256[](sqrtDepthX96.length);
 
         IDepth.PoolVariables memory poolVariables;
         for (uint256 i = 0; i < sqrtDepthX96.length; i++) {
-            poolVariables = poolVariables.pool != pools[i] ? _initializePoolVariables(pools[i]) : poolVariables;
+            poolVariables = poolVariables.pool != poolKeys[i] ? _initializePoolVariables(pools[i]) : poolVariables;
             amounts[i] = _calculateDepth(poolVariables, configs[i], sqrtDepthX96[i]);
         }
         return amounts;
@@ -57,6 +70,8 @@ contract Depth is IDepth {
     {
         bool upper = config.side == Side.Upper;
 
+        PoolId poolId = poolVariables.poolKey.toId();
+
         // Prep step variables.
         uint160 sqrtPriceX96Current = poolVariables.sqrtPriceX96;
         uint160 sqrtPriceX96Tgt = config.getSqrtPriceX96Tgt(poolVariables.sqrtPriceX96, sqrtDepthX96);
@@ -78,7 +93,8 @@ contract Depth is IDepth {
 
             // Update the state variables.
             // First, we need liquidity net to calculate the liquidity spot.
-            (, int128 liquidityNet,,,,,,) = IUniswapV3Pool(poolVariables.pool).ticks(tickNext);
+            (, int128 liquidityNet) = IPoolManager(poolManager).getTickLiquidity(poolId, tickNext);
+
             if (!upper) {
                 liquidityNet = -liquidityNet;
                 // If not going upper, always push tickNext to the next word because we are on a word boundary.
@@ -94,17 +110,17 @@ contract Depth is IDepth {
         }
     }
 
-    function _initializePoolVariables(address poolAddress) internal view returns (PoolVariables memory poolVariables) {
-        IUniswapV3Pool pool = IUniswapV3Pool(poolAddress);
-
-        (uint160 sqrtPriceX96, int24 tick,,,,,) = pool.slot0();
-
+    function _initializePoolVariables(PoolKey poolKey) internal view returns (PoolVariables memory poolVariables) {
+        PoolId poolId = poolKey.toId();
+        
+        (uint160 sqrtPriceX96, int24 tick,,,,,) = poolManager.getSlot0(poolId);
+        
         poolVariables = IDepth.PoolVariables({
             tick: tick,
-            tickSpacing: pool.tickSpacing(),
+            tickSpacing: poolKey.tickSpacing(),
             liquidity: pool.liquidity(),
             sqrtPriceX96: sqrtPriceX96,
-            pool: poolAddress
+            poolKey: poolKey,
         });
     }
 

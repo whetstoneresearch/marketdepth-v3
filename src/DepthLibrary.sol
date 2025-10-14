@@ -6,7 +6,6 @@ import {FullMath} from "v3-core/contracts/libraries/FullMath.sol";
 import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
 import {TickMath} from "v3-core/contracts/libraries/TickMath.sol";
 
-
 library DepthLibrary {
     // 112045541949572287496682733568 = sqrt(2) * 2^96
     // The maximum depth calculated in the exact case is 100%.
