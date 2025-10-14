@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 pragma abicoder v2;
 
-import {IUniswapV3Pool} from "v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import {FullMath} from "v3-core/contracts/libraries/FullMath.sol";
-import {TickMath} from "v3-core/contracts/libraries/TickMath.sol";
-import {SqrtPriceMath} from "v3-core/contracts/libraries/SqrtPriceMath.sol";
-import {LiquidityMath} from "v3-core/contracts/libraries/LiquidityMath.sol";
+import {FullMath} from "v4-core/src/libraries/FullMath.sol";
+import {TickMath} from "v4-core/src/libraries/TickMath.sol";
+import {SqrtPriceMath} from "v4-core/src/libraries/SqrtPriceMath.sol";
+import {LiquidityMath} from "v4-core/src/libraries/LiquidityMath.sol";
 import {IDepth} from "./IDepth.sol";
 import {PoolTickBitmap} from "./PoolTickBitmap.sol";
-import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
+import {FixedPoint96} from "v4-core/src/libraries/FixedPoint96.sol";
 import {DepthLibrary} from "./DepthLibrary.sol";
 import {StateLibrary} from "v4-core/src/libraries/StateLibrary.sol";
 import {TransientStateLibrary } from "v4-core/src/libraries/TransientStateLibrary.sol";

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 pragma abicoder v2;
 
 import { PoolKey } from "v4-core/src/types/PoolKey.sol";
@@ -28,7 +28,7 @@ interface IDepth {
         int24 tickSpacing;
         uint128 liquidity;
         uint160 sqrtPriceX96;
-        poolKey pool;
+        PoolKey pool;
     }
 
     /// @notice Calculates the market depth (the amount available to trade in or out) for the requested pools

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
 import {IDepth} from "./IDepth.sol";
-import {FullMath} from "v3-core/contracts/libraries/FullMath.sol";
-import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
-import {TickMath} from "v3-core/contracts/libraries/TickMath.sol";
+import {FullMath} from "v4-core/src/libraries/FullMath.sol";
+import {FixedPoint96} from "v4-core/src/libraries/FixedPoint96.sol";
+import {TickMath} from "v4-core/src/libraries/TickMath.sol";
 
 library DepthLibrary {
     // 112045541949572287496682733568 = sqrt(2) * 2^96
