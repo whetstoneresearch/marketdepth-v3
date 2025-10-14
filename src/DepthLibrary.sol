@@ -17,10 +17,18 @@ library DepthLibrary {
         returns (uint160 sqrtPriceX96Tgt)
     {
         if (config.side == IDepth.Side.Upper) {
-            sqrtPriceX96Tgt = uint160(FullMath.mulDiv(sqrtPriceX96, sqrtDepthX96, FixedPoint96.Q96));
-            require(sqrtPriceX96 <= sqrtPriceX96Tgt, "UpperboundOverflow");
+            if (sqrtDepthX96 == 0) {
+                sqrtPriceX96Tgt = TickMath.MAX_SQRT_RATIO;
+            } else {
+                sqrtPriceX96Tgt = uint160(FullMath.mulDiv(sqrtPriceX96, sqrtDepthX96, FixedPoint96.Q96));
+                require(sqrtPriceX96 <= sqrtPriceX96Tgt, "UpperboundOverflow");
+            }
         } else if (config.side == IDepth.Side.Lower) {
-            sqrtPriceX96Tgt = uint160(FullMath.mulDiv(sqrtPriceX96, FixedPoint96.Q96, sqrtDepthX96));
+            if (sqrtDepthX96 == 0) {
+                sqrtPriceX96Tgt = TickMath.MIN_SQRT_RATIO;
+            } else {
+                sqrtPriceX96Tgt = uint160(FullMath.mulDiv(sqrtPriceX96, FixedPoint96.Q96, sqrtDepthX96));
+            }
         } else {
             revert("InvalidSideToCalculateTargetPrice");
         }
