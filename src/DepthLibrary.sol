@@ -34,9 +34,9 @@ library DepthLibrary {
         }
 
         // clamp down to the required tick range
-         if (sqrtPriceX96Tgt < TickMath.MIN_SQRT_RATIO) {
+        if (sqrtPriceX96Tgt < TickMath.MIN_SQRT_RATIO) {
             sqrtPriceX96Tgt = TickMath.MIN_SQRT_RATIO;
-        } else (sqrtPriceX96Tgt > TickMath.MAX_SQRT_RATIO) {
+        } else if (sqrtPriceX96Tgt > TickMath.MAX_SQRT_RATIO) {
             sqrtPriceX96Tgt = TickMath.MAX_SQRT_RATIO;
         }
     }
