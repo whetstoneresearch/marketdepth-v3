@@ -18,14 +18,14 @@ library DepthLibrary {
     {
         if (config.side == IDepth.Side.Upper) {
             if (sqrtDepthX96 == 0) {
-                sqrtPriceX96Tgt = TickMath.MAX_SQRT_RATIO;
+                sqrtPriceX96Tgt = TickMath.MAX_SQRT_PRICE;
             } else {
                 sqrtPriceX96Tgt = uint160(FullMath.mulDiv(sqrtPriceX96, sqrtDepthX96, FixedPoint96.Q96));
                 require(sqrtPriceX96 <= sqrtPriceX96Tgt, "UpperboundOverflow");
             }
         } else if (config.side == IDepth.Side.Lower) {
             if (sqrtDepthX96 == 0) {
-                sqrtPriceX96Tgt = TickMath.MIN_SQRT_RATIO;
+                sqrtPriceX96Tgt = TickMath.MIN_SQRT_PRICE;
             } else {
                 sqrtPriceX96Tgt = uint160(FullMath.mulDiv(sqrtPriceX96, FixedPoint96.Q96, sqrtDepthX96));
             }
@@ -34,10 +34,10 @@ library DepthLibrary {
         }
 
         // clamp down to the required tick range
-        if (sqrtPriceX96Tgt < TickMath.MIN_SQRT_RATIO) {
-            sqrtPriceX96Tgt = TickMath.MIN_SQRT_RATIO;
-        } else if (sqrtPriceX96Tgt > TickMath.MAX_SQRT_RATIO) {
-            sqrtPriceX96Tgt = TickMath.MAX_SQRT_RATIO;
+        if (sqrtPriceX96Tgt < TickMath.MIN_SQRT_PRICE) {
+            sqrtPriceX96Tgt = TickMath.MIN_SQRT_PRICE;
+        } else if (sqrtPriceX96Tgt > TickMath.MAX_SQRT_PRICE) {
+            sqrtPriceX96Tgt = TickMath.MAX_SQRT_PRICE;
         }
     }
 }
